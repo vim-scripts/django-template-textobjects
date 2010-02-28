@@ -1,0 +1,29 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=2999
+
+Repo: http://github.com/mjbrownie/django-template-textobjects
+
+Example vid (includes other plugins): http://www.youtube.com/watch?v=NbV-OrFMalU
+
+" Dependencies:
+"
+"     textobj-user by Kana Natsuno
+"     http://www.vim.org/scripts/script.php?script_id=2100
+"
+"
+"
+" Overview:
+"     This plugin adds some textobjects to the html.django_template filetype
+"
+"     idb/adb - in/around a django {% block %}
+"     idf/adf - in around a django {% for %} loop
+"     idi/adi - in/around a django {% if* } tag
+"     idw/adw - in around a django {% with %} tag 
+"
+"    so use as you would other text objects in visual selection, cutting and
+"    deleting etc. 
+"
+"    Eg. vidb,... vidi ... dadf ... gUidw ... possiblities are as endless as they are awesome
+
+Note there's a complimentary html textobject script as well 
+
+http://www.vim.org/scripts/script.php?script_id=3000
