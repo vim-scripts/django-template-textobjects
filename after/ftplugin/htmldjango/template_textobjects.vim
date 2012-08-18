@@ -26,12 +26,12 @@
 "     http://www.vim.org/scripts/script.php?script_id=2100
 "
 " Overview:
-"     This plugin adds some textobjects to the html.django_template filetype
+"     This plugin adds some textobjects to the htmldjango filetype
 "
 "     idb/adb - in/around a django {% block %}
 "     idf/adf - in around a django {% for %} loop
 "     idi/adi - in/around a django {% if* } tag
-"     idw/adw - in around a django {% with %} tag 
+"     idw/adw - in around a django {% with %} tag
 "
 "    so Use as you would other text objects in visual selection, cutting and
 "    dealleting etc.
@@ -39,31 +39,32 @@
 " Installation:
 "
 "   Please ensure you have the above plugins installed as instructed
-"   This file should be in your after/ftplugin for django_template
+"   This file should be in your after/ftplugin for htmldjango
 "
-"   ~/.vim/after/ftplugin/django_template/template_textobjects.vim
+"   ~/.vim/after/ftplugin/htmldjango/template_textobjects.vim
 "
 " }}
 
+"TODO This if block is vestigial from when matchit.vim was required. It still
+"performs a useful setup but should probably be in the syntax file.
 if exists("loaded_matchit")
     let b:match_ignorecase = 1
     let b:match_skip = 's:Comment'
     let b:match_words = '<:>,' .
     \ '<\@<=[ou]l\>[^>]*\%(>\|$\):<\@<=li\>:<\@<=/[ou]l>,' .
     \ '<\@<=dl\>[^>]*\%(>\|$\):<\@<=d[td]\>:<\@<=/dl>,' .
-    \ '<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\):<\@<=/\1>,'  . 
-    \ '{% *if .*%}:{% *else *%}:{% *endif *%},' . 
-    \ '{% *ifequal .*%}:{% *else *%}:{% *endifequal *%},' . 
-    \ '{% *ifnotequal .*%}:{% *else *%}:{% *endifnotequal *%},' . 
-    \ '{% *ifchanged .*%}:{% *else *%}:{% *endifchanged *%},' . 
-    \ '{% *for .*%}:{% *endfor *%},' . 
+    \ '<\@<=\([^/][^ \t>]*\)[^>]*\%(>\|$\):<\@<=/\1>,'  .
+    \ '{% *if .*%}:{% *else *%}:{% *endif *%},' .
+    \ '{% *ifequal .*%}:{% *else *%}:{% *endifequal *%},' .
+    \ '{% *ifnotequal .*%}:{% *else *%}:{% *endifnotequal *%},' .
+    \ '{% *ifchanged .*%}:{% *else *%}:{% *endifchanged *%},' .
+    \ '{% *for .*%}:{% *endfor *%},' .
     \ '{% *with .*%}:{% *endwith *%},' .
     \ '{% *comment .*%}:{% *endcomment *%},' .
     \ '{% *block .*%}:{% *endblock *%},' .
     \ '{% *filter .*%}:{% *endfilter *%},' .
-    \ '{% *spaceless .*%}:{% *endspaceless *%}' 
-else
-    finish
+    \ '{% *spaceless .*%}:{% *endspaceless *%},' .
+    \ '{% *cache .*%}:{% *endcache *%}'
 endif
 
 if !exists('*g:textobj_function_django_template')
@@ -156,6 +157,39 @@ if !exists('*g:textobj_function_django_template')
        return s:select_i('for')
     endfun
 
+
+    fun s:select_autoescape_a()
+       return s:select_a('autoescape')
+    endfun
+
+    fun s:select_autoescape_i()
+       return s:select_i('autoescape')
+    endfun
+
+    fun s:select_filter_a()
+       return s:select_a('filter')
+    endfun
+
+    fun s:select_filter_i()
+       return s:select_i('filter')
+    endfun
+
+    fun s:select_spaceless_a()
+       return s:select_a('spaceless')
+    endfun
+
+    fun s:select_spaceless_i()
+       return s:select_i('spaceless')
+    endfun
+
+    fun s:select_cache_a()
+       return s:select_a('cache')
+    endfun
+
+    fun s:select_cache_i()
+       return s:select_i('cache')
+    endfun
+
 endif
 
 call textobj#user#plugin('djangotemplate',{
@@ -184,4 +218,26 @@ call textobj#user#plugin('djangotemplate',{
 \       'select-a':'adf','*select-a-function*':'s:select_for_a',
 \       'select-i':'idf', '*select-i-function*':'s:select_for_i'
 \   },
+\   'autoescape':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'ada','*select-a-function*':'s:select_autoescape_a',
+\       'select-i':'ida', '*select-i-function*':'s:select_autoescape_i'
+\   },
+\   'spaceless':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'ads','*select-a-function*':'s:select_spaceless_a',
+\       'select-i':'ids', '*select-i-function*':'s:select_spaceless_i'
+\   },
+\   'filter':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'ads','*select-a-function*':'s:select_filter_a',
+\       'select-i':'ids', '*select-i-function*':'s:select_filter_i'
+\   },
+\   'cache':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'adC','*select-a-function*':'s:select_cache_a',
+\       'select-i':'idC', '*select-i-function*':'s:select_cache_i'
+\   },
 \})
+
+runtime! after/ftplugin/html/html_textobjects.vim
