@@ -64,7 +64,8 @@ if exists("loaded_matchit")
     \ '{% *block .*%}:{% *endblock *%},' .
     \ '{% *filter .*%}:{% *endfilter *%},' .
     \ '{% *spaceless .*%}:{% *endspaceless *%},' .
-    \ '{% *cache .*%}:{% *endcache *%}'
+    \ '{% *cache .*%}:{% *endcache *%}' .
+    \ '{% *blocktrans .*%}:{% *endblocktrans *%}'
 endif
 
 if !exists('*g:textobj_function_django_template')
@@ -190,6 +191,61 @@ if !exists('*g:textobj_function_django_template')
        return s:select_i('cache')
     endfun
 
+    fun s:select_blocktrans_a()
+       return s:select_a('blocktrans')
+    endfun
+
+    fun s:select_blocktrans_i()
+       return s:select_i('blocktrans')
+    endfun
+
+    fun s:select_variable_i()
+        let initpos = getpos(".")
+        if  (searchpair('{{.','','}}','b') == 0)
+            return 0
+        endif
+
+        call search('..')
+        let e = getpos('.')
+        call search('.}}')
+        let b = getpos('.')
+        return ['v',b,e]
+    endfun
+
+    fun s:select_variable_a()
+        let initpos = getpos(".")
+        if  (searchpair('{{','','}}','b') == 0)
+            return 0
+        endif
+        let b = getpos('.')
+        call search('}}','e')
+        let e = getpos('.')
+        return ['v',b,e]
+    endfun
+
+    fun s:select_tag_i()
+        let initpos = getpos(".")
+        if  (searchpair('{%.','','%}','b') == 0)
+            return 0
+        endif
+
+        call search('..')
+        let e = getpos('.')
+        call search('.%}')
+        let b = getpos('.')
+        return ['v',b,e]
+    endfun
+
+    fun s:select_tag_a()
+        let initpos = getpos(".")
+        if  (searchpair('{%','','%}','b') == 0)
+            return 0
+        endif
+        let b = getpos('.')
+        call search('%}','e')
+        let e = getpos('.')
+        return ['v',b,e]
+    endfun
 endif
 
 call textobj#user#plugin('djangotemplate',{
@@ -237,6 +293,21 @@ call textobj#user#plugin('djangotemplate',{
 \       '*sfile*': expand('<sfile>:p'),
 \       'select-a':'adC','*select-a-function*':'s:select_cache_a',
 \       'select-i':'idC', '*select-i-function*':'s:select_cache_i'
+\   },
+\   'blocktrans':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'adT','*select-a-function*':'s:select_blocktrans_a',
+\       'select-i':'idT', '*select-i-function*':'s:select_blocktrans_i'
+\   },
+\   'variable':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'adv','*select-a-function*':'s:select_variable_a',
+\       'select-i':'idv', '*select-i-function*':'s:select_variable_i'
+\   },
+\   'tag':{
+\       '*sfile*': expand('<sfile>:p'),
+\       'select-a':'adt','*select-a-function*':'s:select_tag_a',
+\       'select-i':'idt', '*select-i-function*':'s:select_tag_i'
 \   },
 \})
 

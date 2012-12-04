@@ -24,6 +24,7 @@ This is a mirror of http://www.vim.org/scripts/script.php?script_id=2999
 "
 "   Pathogen/Vundle (recommended):
 "
+"   git clone https://github.com/kana/vim-textobj-user.git ~/.vim/bundle/vim-textobj-user
 "   git clone git://github.com/mjbrownie/django-template-textobjects.git ~/.vim/bundle/django_template_textobjects
 "
 "   Manual:
